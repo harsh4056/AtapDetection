@@ -37,10 +37,11 @@ public class RealtimeDataDisplayFragment extends Fragment {
     private double previousTap=0d;
     private TextView textViewData,textViewDiff;
     private TextView textViewDoubleDiff;
-
-   double [] movingAverage= new double[25];
+    private  int size=25;
+   double [] movingAverage= new double[size];
 
     int counter=0;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,7 +63,7 @@ public class RealtimeDataDisplayFragment extends Fragment {
 
 
 
-        for(int i=0;i<25;i++)
+        for(int i=0;i<size;i++)
             movingAverage[i]=0.0d;
 
 
@@ -94,11 +95,17 @@ public class RealtimeDataDisplayFragment extends Fragment {
                 float z = event.values[2];
                 double total = Math.sqrt(x * x + y * y + z * z);
                 graph2LastXValue += 1d;
-                double currentValue=total;
+                double currentValue=Math.round( total);
                 textViewData.setText( currentValue+"");
 
+                double sum=0;
+                for(int i=0;i<size-1;i++) {
+                    sum=sum+ movingAverage[i];
+                    movingAverage[i + 1] = movingAverage[i];
 
-
+                }
+                    movingAverage[size=1]=currentValue;
+                sum=sum+currentValue;
 
 
 
@@ -116,7 +123,7 @@ public class RealtimeDataDisplayFragment extends Fragment {
 
 
                 double doubleDifferentiator=Math.abs( differentiator-previousDifferentiator);
-                mSeries3.appendData(new DataPoint(graph2LastXValue, Math.round(doubleDifferentiator)), true, 40);
+                mSeries3.appendData(new DataPoint(graph2LastXValue, sum/size), true, 40);
                 textViewDoubleDiff.setText(Math.round(doubleDifferentiator)+"");
                 previousDifferentiator=doubleDifferentiator;
 
@@ -126,7 +133,7 @@ public class RealtimeDataDisplayFragment extends Fragment {
             public void onAccuracyChanged(Sensor sensor, int accuracy) {
             }
 
-        }, sensor, SensorManager.SENSOR_DELAY_GAME);
+        }, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         return rootView;
     }
