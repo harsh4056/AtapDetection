@@ -19,6 +19,7 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.net.InterfaceAddress;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -36,6 +37,9 @@ public class RealtimeDataDisplayFragment extends Fragment {
     private double previousTap=0d;
     private TextView textViewData,textViewDiff;
     private TextView textViewDoubleDiff;
+
+   double [] movingAverage= new double[25];
+
     int counter=0;
 
     @Override
@@ -58,7 +62,8 @@ public class RealtimeDataDisplayFragment extends Fragment {
 
 
 
-
+        for(int i=0;i<25;i++)
+            movingAverage[i]=0.0d;
 
 
 
@@ -121,7 +126,7 @@ public class RealtimeDataDisplayFragment extends Fragment {
             public void onAccuracyChanged(Sensor sensor, int accuracy) {
             }
 
-        }, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+        }, sensor, SensorManager.SENSOR_DELAY_GAME);
 
         return rootView;
     }
