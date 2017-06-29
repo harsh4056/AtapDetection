@@ -36,7 +36,7 @@ public class SensorActivity extends Activity{
 			ft.add(CONTENT_VIEW_ID, newFragment).commit();
 		}
 
-		TapDetection tp= new TapDetection(SensorActivity.this);
+		/*TapDetection tp= new TapDetection(SensorActivity.this);
 		tp.setOnTapDetectionListener(new TapDetection.OnTapDetectionListener() {
 			@Override
 			public void onTapDetected() {
@@ -62,7 +62,7 @@ public class SensorActivity extends Activity{
 
 
 		});
-
+*/
 
 
 

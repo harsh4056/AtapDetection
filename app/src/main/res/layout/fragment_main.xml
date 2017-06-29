@@ -12,34 +12,126 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <com.jjoe64.graphview.GraphView
-                android:id="@+id/graph1"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dip" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/textView"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="0.5">
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+
+                    <com.jjoe64.graphview.GraphView
+                        android:id="@+id/graphView"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dip" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="TextView" />
+
+                    <com.jjoe64.graphview.GraphView
+                        android:id="@+id/graph1"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dip" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="TextView" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    >
+
+                    <EditText
+                        android:id="@+id/editTextInfluence"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:hint="Influence"
+                        android:inputType="numberDecimal" />
+
+                    <EditText
+                        android:id="@+id/editThreshold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:hint="Threshold"
+                        android:inputType="numberDecimal" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/editTextGap"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:inputType="number" />
+
+                    <EditText
+                        android:id="@+id/editTextLag"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:ems="10"
+                        android:hint="Lag"
+                        android:gravity="center"
+                        android:inputType="number" />
+                </LinearLayout>
+            </LinearLayout>
 
             <com.jjoe64.graphview.GraphView
                 android:id="@+id/graph2"
                 android:layout_width="match_parent"
                 android:layout_height="200dip" />
 
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="1000"
+                android:min="5"/>
+
             <TextView
-                android:id="@+id/textViewDiff"
+                android:id="@+id/textViewSTD"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="TextView" />
-
-            <com.jjoe64.graphview.GraphView
-                android:id="@+id/graphView"
-                android:layout_width="match_parent"
-                android:layout_height="200dip" />
 
             <TextView
                 android:id="@+id/tvDOubleDIfferentiator"
