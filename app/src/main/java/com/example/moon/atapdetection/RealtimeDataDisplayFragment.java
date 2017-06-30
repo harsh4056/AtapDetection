@@ -99,7 +99,6 @@ public class RealtimeDataDisplayFragment extends Fragment {
         etTapGap=rootView.findViewById(R.id.editTextGap);
 
 
-
         etLag.setOnKeyListener(onKeyListener);
         etThreshold.setOnKeyListener(onKeyListener);
         etInfluence.setOnKeyListener(onKeyListener);
@@ -406,7 +405,7 @@ public class RealtimeDataDisplayFragment extends Fragment {
         getContext().sendBroadcast(i);
     }
     void OnDoubleTapDetection(){
-        Toast.makeText(getContext(),"Double",Toast.LENGTH_SHORT).show();
+
         Intent i = new Intent("com.android.music.musicservicecommand.togglepause");
         i.putExtra("command", "togglepause");
         getContext().sendBroadcast(i);
