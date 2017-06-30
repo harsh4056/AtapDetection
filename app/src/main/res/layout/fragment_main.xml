@@ -42,12 +42,7 @@
                     android:orientation="vertical"
                     android:visibility="gone">
 
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="TextView" />
+
 
                     <com.jjoe64.graphview.GraphView
                         android:id="@+id/graph1"
@@ -100,6 +95,7 @@
                         android:layout_weight="0.5"
                         android:ems="10"
                         android:gravity="center"
+                        android:hint="Tap Intervals"
                         android:inputType="number" />
 
                     <EditText
@@ -115,7 +111,7 @@
             </LinearLayout>
 
             <com.jjoe64.graphview.GraphView
-                android:id="@+id/graph2"
+                android:id="@+id/graphBinary"
                 android:layout_width="match_parent"
                 android:layout_height="200dip" />
 
@@ -126,19 +122,7 @@
                 android:max="1000"
                 android:min="5"/>
 
-            <TextView
-                android:id="@+id/textViewSTD"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="TextView" />
 
-            <TextView
-                android:id="@+id/tvDOubleDIfferentiator"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="TextView" />
         </LinearLayout>
     </ScrollView>
 
