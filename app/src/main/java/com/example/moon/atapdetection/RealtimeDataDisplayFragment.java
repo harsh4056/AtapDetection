@@ -301,10 +301,17 @@ public class RealtimeDataDisplayFragment extends Fragment {
 
 
 
+
+
+
+
+
+
+            /*---------------------------Taps detection logic-------------------------------------*/
             if(mean>0 && firstTap) {
-                 // first tap detect and hold position
+                // first tap detect and hold position
                 firstTap=false;
-                    initialTap = i;
+                initialTap = i;
 
 
 
@@ -329,38 +336,6 @@ public class RealtimeDataDisplayFragment extends Fragment {
 
 
             }
-
-
-
-
-
-            /*---------------------------Taps detection logic-------------------------------------*/
-            /*if(binarySignal.endsWith("01" ) ) {// Regex matching with ends with to detect tap
-
-               if(!firstTap) {
-
-                   firstTap = false;
-                   if (initialTap == 0) { // first tap detect and hold position
-                       initialTap = i;
-                       binarySignal = "";
-
-
-                   } else if (i > initialTap + tapGap) {//Check if second tap detected in signals
-
-                       initialTap = 0;
-                       binarySignal = "";
-                       OnDoubleTapDetection();
-                   } else {//  Second tap not detected then declare single tap
-                       OnSingleTapDetection();
-                       initialTap = 0;
-                       binarySignal = "";
-                   }
-               }else {
-
-
-               }
-                }*/
-
  /*------------------------------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------------------------------------------------------------*/
 
