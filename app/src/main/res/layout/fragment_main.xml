@@ -70,7 +70,8 @@
                         android:ems="10"
                         android:gravity="center"
                         android:hint="Influence"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:visibility="gone" />
 
                     <EditText
                         android:id="@+id/editThreshold"
@@ -80,7 +81,8 @@
                         android:ems="10"
                         android:gravity="center"
                         android:hint="Threshold"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -96,7 +98,8 @@
                         android:ems="10"
                         android:gravity="center"
                         android:hint="Tap Intervals"
-                        android:inputType="number" />
+                        android:inputType="number"
+                        android:visibility="gone" />
 
                     <EditText
                         android:id="@+id/editTextLag"
@@ -104,9 +107,10 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:ems="10"
-                        android:hint="Lag"
                         android:gravity="center"
-                        android:inputType="number" />
+                        android:hint="Lag"
+                        android:inputType="number"
+                        android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
 

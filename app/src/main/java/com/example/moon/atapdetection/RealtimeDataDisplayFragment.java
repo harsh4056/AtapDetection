@@ -38,9 +38,10 @@ public class RealtimeDataDisplayFragment extends Fragment {
 
     private LineGraphSeries<DataPoint> dataSignalLineGraphSeries;// add original signal to graph
     private LineGraphSeries<DataPoint> binarySignalLineGraphSeries;//add peaks detected to graphs
-    private LineGraphSeries<DataPoint> stdeviationLineGraphSeries;// Standard deviation
+    private LineGraphSeries<DataPoint> stdeviationLineGraphSeries;
+    private LineGraphSeries<DataPoint> negativeStdeviationLineGraphSeries;// Standard deviation
     private double graph2LastXValue = 0d;// X value of the Graph
-
+    boolean firstTap=true;
     private EditText etInfluence,etThreshold,etLag;// Edit texts
     private SeekBar seekBar;
      Sensor sensor;
@@ -49,18 +50,18 @@ public class RealtimeDataDisplayFragment extends Fragment {
     private int samplingRate=5;//Current saples per second
 
     private int initialTap=0;// first tap detected at value
-    private int tapGap=50;// interval after which second tap is to be detected
+    private int tapGap=100;// interval after which second tap is to be detected
 
     ArrayList<Double> filteredY = new ArrayList<>();//initialised with values of original signal till lag th position
     ArrayList<Double> avgFilter = new ArrayList<>();// moving average storage arraylist
     ArrayList<Double> stdFilter = new ArrayList<>();// moving standard deviation storage arraylist
     ArrayList<Double> originalSignal = new ArrayList<>();// original signal storage arraylist
 
-    int lag= 15;// window size to calculate mean
+    int lag= 100;// window size to calculate mean
 
     private  int i=lag;// x value counter,cannot be same xlastvalue as to initialize other variables
-    double threshold= 3.5;// Calculation of tap detection if signal is threshold values away
-    double influence= 0.5;// influence percentage of new signal to mean and standard deviation
+    double threshold= 110000000;// Calculation of tap detection if signal is threshold values away
+    double influence= 1.0;// influence percentage of new signal to mean and standard deviation
 
     double mean;// as the name suggests
     private boolean initialized=false;// for values stored up to lag point
@@ -75,7 +76,7 @@ public class RealtimeDataDisplayFragment extends Fragment {
 
         sensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
 
 
@@ -89,6 +90,7 @@ public class RealtimeDataDisplayFragment extends Fragment {
         graph.getViewport().setMaxX(40);
         GraphView graph2 = rootView.findViewById(R.id.graphBinary);
         binarySignalLineGraphSeries = new LineGraphSeries<>();
+        negativeStdeviationLineGraphSeries=new LineGraphSeries<>();
         graph2.addSeries(binarySignalLineGraphSeries);
         graph2.getViewport().setXAxisBoundsManual(true);
         graph2.getViewport().setMinX(0);
@@ -107,6 +109,7 @@ public class RealtimeDataDisplayFragment extends Fragment {
 
         stdeviationLineGraphSeries = new LineGraphSeries<>();
         meanSeries = new LineGraphSeries<>();
+        graph.addSeries(negativeStdeviationLineGraphSeries);
         graph.addSeries(stdeviationLineGraphSeries);
         graph.addSeries(meanSeries);
 /*-------------------------------------------------------------------------------------------------------------------------------------*/
@@ -154,7 +157,7 @@ public class RealtimeDataDisplayFragment extends Fragment {
             float z = event.values[2];
             double total = Math.sqrt(x * x + y * y + z * z);
             //    double total=y;
-            double currentValue=  total;
+            double currentValue=  Math.round(total);
 
 
 
@@ -187,10 +190,10 @@ public class RealtimeDataDisplayFragment extends Fragment {
             dataSignalLineGraphSeries.setColor(Color.GRAY);
             dataSignalLineGraphSeries.appendData(new DataPoint(graph2LastXValue, currentValue), true, 40);
 
-            if(!stdFilter.isEmpty()) {
+            /*if(!stdFilter.isEmpty()) {
                 stdeviationLineGraphSeries.setColor(Color.BLUE);
-                stdeviationLineGraphSeries.appendData(new DataPoint(graph2LastXValue,threshold* -stdFilter.get(j)), true, 40);
-            stdeviationLineGraphSeries.appendData(new DataPoint(graph2LastXValue,threshold* stdFilter.get(j)), true, 40);}
+                negativeStdeviationLineGraphSeries.appendData(new DataPoint(graph2LastXValue,threshold* -stdFilter.get(j)), true, 40);
+            stdeviationLineGraphSeries.appendData(new DataPoint(graph2LastXValue,threshold* stdFilter.get(j)), true, 40);}*/
             if(!avgFilter.isEmpty()) {
                 meanSeries.setColor(Color.GREEN);
                 meanSeries.appendData(new DataPoint(graph2LastXValue, avgFilter.get(j)), true, 40);
@@ -232,8 +235,8 @@ public class RealtimeDataDisplayFragment extends Fragment {
 
                         case R.id.editTextGap:
 
-
-
+                            tapGap= Integer.parseInt(etTapGap.getText().toString());
+                            break;
                     }
 
 
@@ -283,10 +286,10 @@ public class RealtimeDataDisplayFragment extends Fragment {
                     filteredY.add( originalSignal.get(i));
                 }
                     Log.d("I :",i+"");
-          //  Log.d("Binary :",binarySignal);
+           Log.d("Binary :",binarySignal);
                 mean = mean(filteredY, i, i - lag);
                 avgFilter.add( mean);
-
+                mean=Math.round(mean);
 
             double std=standardDeviation(filteredY, mean, i, i - lag);
             Log.d("Data :","Mean: "+ mean+"STD : "+std *threshold);
@@ -296,29 +299,67 @@ public class RealtimeDataDisplayFragment extends Fragment {
 
             i++;
 
-            /*---------------------------Taps detection logic-------------------------------------*/
-            if(binarySignal.endsWith("0100") ) {// Regex matching with ends with to detect tap
-
-                if(initialTap==0){ // first tap detect and hold position
-                    initialTap=i;
-                    binarySignal="";
 
 
+            if(mean>0 && firstTap) {
+                 // first tap detect and hold position
+                firstTap=false;
+                    initialTap = i;
 
-                }
-                else if (i>initialTap+tapGap) {//Check if second tap detected in signals
 
-                    initialTap=0;
-                    binarySignal="";
+
+
+
+            }
+            else if (mean ==0 && !firstTap){
+
+                firstTap=true;
+
+                if (i >= initialTap + tapGap ) {//Check if second tap detected in signals
+                    Toast.makeText(getContext(),""+(i-initialTap),Toast.LENGTH_SHORT).show();
+                    initialTap = 0;
+                    binarySignal = "";
                     OnDoubleTapDetection();
+                } else {//  Second tap not detected then declare single tap
+                    Toast.makeText(getContext(),""+(i-initialTap),Toast.LENGTH_SHORT).show();
+                    OnSingleTapDetection();
+                    initialTap = 0;
+                    binarySignal = "";
                 }
 
-                else {//  Second tap not detected then declare single tap
-                    OnSingleTapDetection();
-                    initialTap=0;
-                    binarySignal="";
-                }
-                }
+
+            }
+
+
+
+
+
+            /*---------------------------Taps detection logic-------------------------------------*/
+            /*if(binarySignal.endsWith("01" ) ) {// Regex matching with ends with to detect tap
+
+               if(!firstTap) {
+
+                   firstTap = false;
+                   if (initialTap == 0) { // first tap detect and hold position
+                       initialTap = i;
+                       binarySignal = "";
+
+
+                   } else if (i > initialTap + tapGap) {//Check if second tap detected in signals
+
+                       initialTap = 0;
+                       binarySignal = "";
+                       OnDoubleTapDetection();
+                   } else {//  Second tap not detected then declare single tap
+                       OnSingleTapDetection();
+                       initialTap = 0;
+                       binarySignal = "";
+                   }
+               }else {
+
+
+               }
+                }*/
 
  /*------------------------------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------------------------------------------------------------*/
@@ -403,9 +444,11 @@ public class RealtimeDataDisplayFragment extends Fragment {
         Intent i = new Intent("com.android.music.musicservicecommand.togglepause");
         i.putExtra("command", "next");
         getContext().sendBroadcast(i);
+
+
     }
     void OnDoubleTapDetection(){
-
+        Toast.makeText(getContext(),"Double",Toast.LENGTH_SHORT).show();
         Intent i = new Intent("com.android.music.musicservicecommand.togglepause");
         i.putExtra("command", "togglepause");
         getContext().sendBroadcast(i);
